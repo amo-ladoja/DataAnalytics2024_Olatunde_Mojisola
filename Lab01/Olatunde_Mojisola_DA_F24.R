@@ -153,3 +153,79 @@ qqline(APO.new)
 
 qqplot(rt(250, df=5), APO.new, xlab = "Q-Q plot for t dsn")
 qqline(APO.new)
+
+
+
+#Exercise 2A -- Data frame: WRS.new
+#We print the data for the data frame WRS.new
+epi2024results06022024$WRS.new
+
+#First, we view the data set
+View(epi2024results06022024)
+
+attach(epi2024results06022024)
+
+#We print the data for the data frame WRS.new
+epi2024results06022024$WRS.new
+
+#We set set true values for NA values in APO.new
+is.na(WRS.new)
+tf<- is.na(WRS.new)
+
+#We filter out NA values from the row
+  E <- WRS.new[!tf]
+
+#Get the statistical summary for data frame APO.new (Mean, Median, 25th & 75th quartiles, min & max)
+  summary(WRS.new)
+
+
+  #Get the five-number summary of the data frame WRS.new
+  fivenum(WRS.new)
+  
+  #Get the stem-and-leaf plot of the data frame WRS.new
+  stem(WRS.new)
+
+  #Get the stem-and-leaf plot of the data frame WRS.new
+  stem(WRS.new)
+
+  #produce a histogram (frequencies of values in bars) of the data frame WRS.new
+  hist(WRS.new)
+  
+  #Produce a histogram sequence of distribution in the data frame WRS.new
+  hist(WRS.new,seq(0,110.,10.0), prob=TRUE)
+  
+  #Compute kernel density estimation in the data frame WRS.new
+  lines(density(WRS.new, na.rm = TRUE, bw=1.))
+
+  #Visualize the distribution of data using rug
+  rug(WRS.new)
+
+  #Make x a sequence of the values
+  x <- seq(0,110,10)
+
+  #Make q a probability density using the values
+  q <- dnorm(x,mean = 42, sd=5, log = FALSE)
+  
+  #create lines between x and q
+  lines(x,q)
+  lines(x,.4*q)  
+  
+  #Change the values of q
+  q <- dnorm(x,mean = 65, sd=5, log = FALSE)
+
+  #Create lines x and q
+  lines(x,.12*q)
+  
+  #Return the cumulative density
+  plot(ecdf(WRS.new), do.points=FALSE, verticals = TRUE)
+
+  #Return Quantile-Quantile
+  qqnorm(WRS.new); qqline(WRS.new)
+
+  #Make a Q-Q plot against the generating distribution
+  qqplot(rnorm(250), WRS.new, xlab = "Q-Q plot for norm dsn")
+  qqline(WRS.new)
+  
+  qqplot(rt(250, df=5), WRS.new, xlab = "Q-Q plot for t dsn")
+  qqline(WRS.new)
+  
