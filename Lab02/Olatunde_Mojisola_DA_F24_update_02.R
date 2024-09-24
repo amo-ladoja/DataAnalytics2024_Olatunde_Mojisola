@@ -340,3 +340,8 @@ plot(lin.mod.epinew)
 ggplot(epi.result.sub, aes(x = population_log, y=EPI.new)) +
   geom_point() +
   stat_smooth(method ="lm")
+
+ggplot(lin.mod.epinew, aes(x = .fitted, y = .resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0) +
+  labs(title='Residual vs. Fitted Values Plot', x='Fitted Values', y='Residuals')
