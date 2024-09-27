@@ -320,14 +320,14 @@ epi.result.sub <- epi.result.sub[order(epi.result.sub$country),]
 ##only keep necessary columns
 epi.result.sub <- epi.result.sub[,c("country","EPI.old","EPI.new")]
 
-##convert population to nummeric
+##convert population to numeric
 epi.result.sub$population <- as.numeric(populations$Population)
 
 #compute population log base 10
 epi.result.sub$population_log <- log10(epi.result.sub$population)
 
 
-##Linear Model 
+##Linear Model  for EPI
 
 lin.mod.epinew <- lm(EPI.new~population_log,epi.result.sub)
 plot(EPI.new~population_log)
@@ -383,6 +383,8 @@ boxplot (EPI.new, APO.new, PFL.new)
 boxplot(EPI.new, APO.new, PFL.new, names=c("EPI.new","APO.new","APL.new"))
 
 
+
+
 ##Comparing ECDFs of EPI.new & WRS.new
 
 plot(ecdf(EPI.new), col = "red", main = "Comparison of ECDFs", xlab = "X-axis Label", ylab = "Y-axis Label")
@@ -390,3 +392,5 @@ lines(ecdf(WRS.new), col = "blue")
 
 ##Adding APO.new to the EPI.new & WRS.new comparison 
 lines(ecdf(APO.new), col = "green")
+
+
