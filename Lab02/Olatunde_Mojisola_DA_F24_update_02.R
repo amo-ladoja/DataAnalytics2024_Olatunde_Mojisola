@@ -388,5 +388,5 @@ boxplot(EPI.new, APO.new, PFL.new, names=c("EPI.new","APO.new","APL.new"))
 plot(ecdf(EPI.new), col = "red", main = "Comparison of ECDFs", xlab = "X-axis Label", ylab = "Y-axis Label")
 lines(ecdf(WRS.new), col = "blue")
 
-##Adding APO.new to the comparison 
+##Adding APO.new to the EPI.new & WRS.new comparison 
 lines(ecdf(APO.new), col = "green")
