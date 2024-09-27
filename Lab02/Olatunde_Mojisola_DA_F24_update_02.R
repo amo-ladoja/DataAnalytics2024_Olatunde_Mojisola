@@ -168,14 +168,14 @@ attach(epi2024results06022024)
 #We print the data for the variables WRS.new
 epi2024results06022024$WRS.new
 
-#We set set true values for NA values in APO.new
+#We set set true values for NA values in WRS.new
 is.na(WRS.new)
 tf<- is.na(WRS.new)
 
 #We filter out NA values from the row
   E <- WRS.new[!tf]
 
-#Get the statistical summary for variables APO.new (Mean, Median, 25th & 75th quartiles, min & max)
+#Get the statistical summary for variables WRS.new (Mean, Median, 25th & 75th quartiles, min & max)
   summary(WRS.new)
 
 
@@ -345,3 +345,39 @@ ggplot(lin.mod.epinew, aes(x = .fitted, y = .resid)) +
   geom_point() +
   geom_hline(yintercept = 0) +
   labs(title='Residual vs. Fitted Values Plot', x='Fitted Values', y='Residuals')
+
+
+
+#boxplot comparing 3 variables
+
+attach(epi2024results06022024)
+
+#We print the data for the variable PFL.new
+epi2024results06022024$PFL.new
+
+#We set set true values for NA values in PFL.new
+is.na(PFL.new)
+pf<- is.na(PFL.new)
+
+#Filter False values from PFL
+E <- PFL.new[!pf]
+
+#Get the statistical summary for variables PFL.new (Mean, Median, 25th & 75th quartiles, min & max)
+summary(PFL.new)
+
+
+#Get the five-number summary of  PFL.new
+fivenum(PFL.new)
+
+#Get the stem-and-leaf plot of  PFL.new
+stem(PFL.new)
+
+#Get the stem-and-leaf plot of PFL.new
+stem(PFL.new)
+
+
+#boxplot 
+boxplot (EPI.new, APO.new, PFL.new)
+
+#boxplot named
+boxplot(EPI.new, APO.new, PFL.new, names=c("EPI.new","APO.new","APL.new"))
