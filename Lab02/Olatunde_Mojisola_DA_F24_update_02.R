@@ -236,6 +236,7 @@ tf<- is.na(WRS.new)
 ### fitting a distribution beyond histograms for EPI.new
   
   attach(epi2024results06022024)
+  View(epi2024results06022024)
   qqnorm(EPI.new); qqline(EPI.new)
 
   ### Make a Q-Q plot against the generating distribution
@@ -248,7 +249,7 @@ tf<- is.na(WRS.new)
   ### Cumulative density function for EPI.new
   
   plot(ecdf(EPI.new), do.points=FALSE)
-  plot(ecdf(rnorm(1000, 45, 10)), do.points=FALSE)   
+  plot(ecdf(rnorm(1000, 45, 10)), do.points=FALSE)  
   lines(ecdf(EPI.new))  
   
   
@@ -381,6 +382,7 @@ boxplot (EPI.new, APO.new, PFL.new)
 
 #boxplot named
 boxplot(EPI.new, APO.new, PFL.new, names=c("EPI.new","APO.new","APL.new"))
+boxplot(EPI.new, APO.new, PFL.new, WRS.new)
 
 
 
@@ -394,3 +396,113 @@ lines(ecdf(WRS.new), col = "blue")
 lines(ecdf(APO.new), col = "green")
 
 
+
+
+
+###Lab 02 Part 02 Exercise 01 NaiveBayes for Abalone
+
+library("e1071")
+library("ggplot2")
+
+
+abalone <- read.csv("~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Bayes_Trees_kNN_kMeans_exercise/abalone.csv", header=FALSE)
+
+## rename columns
+colnames(abalone) <- c("sex", "length", 'diameter', 'height', 'whole_weight', 'shucked_wieght', 'viscera_wieght', 'shell_weight', 'rings' )
+
+
+## derive age group based in number of ringsby creating breaks with br and cut them with 0to8
+abalone$age.group <- cut(abalone$rings, br=c(0,8,11,35), labels = c("young", 'adult', 'old'))
+
+#remove sex
+abalone$sex <- NULL
+abalone$rings <- NULL
+
+summary(abalone)
+
+View(abalone)
+
+##train abaloneclass using all data
+abaloneClass <- naiveBayes(abalone[,1:7], abalone[,8])
+
+View(abaloneClass)
+
+## predict Abaloneclasses
+Abaloneprediction <- predict(abaloneClass, abalone[,1:7])
+
+## evaluate Abaloneprediction - table of predict & actual
+table(Abaloneprediction, abalone[,8], dnn=list('predicted','actual'))
+
+#### examine class means and standard deviations for shucked weight
+abaloneClass$tables$shucked_wieght
+
+# one class
+plot(function(x) dnorm(x, 0.1981990, 0.1470311), 0, 3, col="red", main="Petal length distribution for the 3 different species")
+
+# another class
+curve(dnorm(x, 0.4399235, 0.2084367), add=TRUE, col="blue")
+
+# the final class
+curve(dnorm(x, 0.4436984, 0.2083567 ), add=TRUE, col = "green")
+
+
+
+#
+##Try 3 different subsets of features not just all features at once.
+
+##Predict age group based on length and height
+abaloneClass2 <- naiveBayes(abalone[,c(1,3)], abalone[,c(8)])
+
+## evaluate prediction for length & height - table of predict & actual 
+contingencytable01 <- table(predict(abaloneClass2, abalone[,c(1,3)]), abalone[,c(8)], dnn=list("predicted","actual"))
+
+print(contingencytable01)
+
+#### examine class means and standard deviations for length
+abaloneClass2$tables$length
+
+plot(function(x) dnorm(x, 0.4209915, 0.11137474), ylim=c(0, 5), 0, 2, col="red", main="Length distribution for the 3 different age groups")
+curve(dnorm(x, 0.5707182, 0.08740980), add=TRUE, col="blue")
+curve(dnorm(x, 0.5868542, 0.08100644), add=TRUE, col = "green")
+
+
+#
+##Predict age group based on height and shucked_weight
+abaloneClass3 <- naiveBayes(abalone[,c(3,5)], abalone[,c(8)])
+
+##evaluate prediction for height & shucked_weight - table for predict & actual
+contingencytable02 <- table(predict(abaloneClass3, abalone[,c(3,5)]), abalone[,c(8)], dnn=list("predicted","actual"))
+
+print(contingencytable02)
+
+##exammine class means and standard deviations for height
+abaloneClass3$tables$height
+
+plot(function(x) dnorm(x, 0.1065956, 0.04183039), ylim=c(0, 15), 0, 2, col="red", main="Height distribution for the 3 different age groups")
+curve(dnorm(x, 0.1516906, 0.02984784), add=TRUE, col="blue")
+curve(dnorm(x, 0.1648125, 0.02935998), add=TRUE, col = "green")
+
+
+#
+## Predict age group based on whole weight and viscera weight
+abaloneClass4 <- naiveBayes(abalone[,c(4,6)], abalone[,c(8)])
+
+##evaluate prediction for whole weight & shucked_weight - table for predict & actual
+contingencytable03 <- table(predict(abaloneClass4, abalone[,c(4,6)]), abalone[,c(8)], dnn=list("predicted","actual"))
+
+print(contingencytable03)
+
+##exammine class means and standard deviations for height
+abaloneClass4$tables$whole_weight
+
+plot(function(x) dnorm(x, 0.4323742, 0.3060074), ylim=c(0, 3), 0, 2, col="red", main="Whole Weight distribution for the 3 different age groups")
+curve(dnorm(x, 0.9850878, 0.4264315), add=TRUE, col="blue")
+curve(dnorm(x, 1.1148922, 0.4563715), add=TRUE, col = "green")
+
+
+
+#
+###Lab 02 Part 02 Exercise 02 kNN for Abalone
+
+
+View(abalone)
