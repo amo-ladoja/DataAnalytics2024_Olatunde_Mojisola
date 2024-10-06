@@ -504,5 +504,97 @@ curve(dnorm(x, 1.1148922, 0.4563715), add=TRUE, col = "green")
 #
 ###Lab 02 Part 02 Exercise 02 kNN for Abalone
 
+library(class)
 
-View(abalone)
+#normalize <- function(x) {return ((x - min(x)) / (max(x) - min(x))) } 
+#abalone.norm[1:7] <- as.data.frame(lapply(abalone.norm[1:7], normalize))
+rows <- nrow(abalone)
+
+## training set indexes
+sample.abalone <- sample(rows,rows*.7)
+
+## create train & test sets based on sampled indexes
+abalone.train <- abalone[sample.abalone,]
+abalone.test <- abalone[-sample.abalone,]
+
+sqrt(2924)
+
+k = 55
+
+# train model & predict
+KNNpred <- knn(train = abalone.train[1:7], test = abalone.test[1:7], cl = abalone.train$age.group, k = k)
+
+
+# create contingency table/ confusion matrix
+contingency.table <- table(KNNpred,abalone.test$age.group)
+
+contingency.matrix <- as.matrix(contingency.table)
+
+sum(diag(contingency.matrix))/length(abalone.test$age.group)
+
+## run text with multiple k values
+accuracy <- c()
+ks <- c(65,75,85,95,105)
+
+for (k in ks) {
+  
+  KNNpred <- knn(train = abalone.train[1:7], test = abalone.test[1:7], cl = abalone.train$age.group, k = k)
+  cm = as.matrix(table(Actual=KNNpred, Predicted = abalone.test$age.group, dnn=list('predicted','actual')))
+  
+  accuracy <- c(accuracy,sum(diag(cm))/length(abalone.test$age.group)) 
+  
+}
+
+plot(ks,accuracy,type = "b", ylim = c(0.67,0.70))
+
+
+##Repeat the kNN analysis using the iris dataset
+
+library('class')
+
+iris.df <- iris
+View(iris)
+
+
+#normalize <- function(x) {return ((x - min(x)) / (max(x) - min(x))) } 
+#iris.norm[1:7] <- as.data.frame(lapply(iris.norm[1:7], normalize))
+irisrows <- nrow(iris.df)
+
+## training set indexes
+sample.iris <- sample(irisrows,irisrows*.7)
+
+## create training/test sets
+iris.train <- iris[sample.iris,]
+iris.test <- iris[-sample.iris,]
+
+sqrt(105)
+
+k = 11
+
+# train model & predict for sepal.length & sepal.width
+KNNpred <- knn(train = iris.train[1:4], test = iris.test[1:4], cl = iris.train$Species, k = k)
+
+# create contingency table/ confusion matrix
+iris_contingency.table <- table(KNNpred,iris.test$Species)
+
+iris_contingency.matrix <- as.matrix(iris_contingency.table)
+
+sum(diag(iris_contingency.matrix))/length(iris.test$Species)
+
+## run text with multiple k values
+accuracy <- c()
+ks <- c(4,24,48,68,86)
+
+for (k in ks) {
+  
+  KNNpred <- knn(train = iris.train[1:4], test = iris.test[1:4], cl = iris.train$Species, k = k)
+  cm = as.matrix(table(Actual=KNNpred, Predicted = iris.test$Species, dnn=list('predicted','actual')))
+  
+  accuracy <- c(accuracy,sum(diag(cm))/length(iris.test$Species)) 
+  
+}
+
+plot(ks,accuracy,type = "b", ylim = c(0.3,1.2))
+
+
+
