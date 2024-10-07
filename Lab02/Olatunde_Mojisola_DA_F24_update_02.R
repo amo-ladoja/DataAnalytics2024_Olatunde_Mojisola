@@ -431,10 +431,12 @@ View(abaloneClass)
 Abaloneprediction <- predict(abaloneClass, abalone[,1:7])
 
 ## evaluate Abaloneprediction - table of predict & actual
-table(Abaloneprediction, abalone[,8], dnn=list('predicted','actual'))
+contingencytable00 <- table(Abaloneprediction, abalone[,8], dnn=list('predicted','actual'))
 
 #### examine class means and standard deviations for shucked weight
 abaloneClass$tables$shucked_wieght
+
+write.csv(contingencytable00, "~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab02/Lab02_Part02/contingencytable00.csv")
 
 # one class
 plot(function(x) dnorm(x, 0.1981990, 0.1470311), 0, 3, col="red", main="Petal length distribution for the 3 different species")
@@ -461,6 +463,7 @@ print(contingencytable01)
 #### examine class means and standard deviations for length
 abaloneClass2$tables$length
 
+write.csv(contingencytable01, "~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab02/Lab02_Part02/contingencytable01.csv")
 plot(function(x) dnorm(x, 0.4209915, 0.11137474), ylim=c(0, 5), 0, 2, col="red", main="Length distribution for the 3 different age groups")
 curve(dnorm(x, 0.5707182, 0.08740980), add=TRUE, col="blue")
 curve(dnorm(x, 0.5868542, 0.08100644), add=TRUE, col = "green")
@@ -478,6 +481,8 @@ print(contingencytable02)
 ##exammine class means and standard deviations for height
 abaloneClass3$tables$height
 
+write.csv(contingencytable02, "~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab02/Lab02_Part02/contingencytable02.csv")
+
 plot(function(x) dnorm(x, 0.1065956, 0.04183039), ylim=c(0, 15), 0, 2, col="red", main="Height distribution for the 3 different age groups")
 curve(dnorm(x, 0.1516906, 0.02984784), add=TRUE, col="blue")
 curve(dnorm(x, 0.1648125, 0.02935998), add=TRUE, col = "green")
@@ -494,6 +499,8 @@ print(contingencytable03)
 
 ##exammine class means and standard deviations for height
 abaloneClass4$tables$whole_weight
+
+write.csv(contingencytable03, "~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab02/Lab02_Part02/contingencytable03.csv")
 
 plot(function(x) dnorm(x, 0.4323742, 0.3060074), ylim=c(0, 3), 0, 2, col="red", main="Whole Weight distribution for the 3 different age groups")
 curve(dnorm(x, 0.9850878, 0.4264315), add=TRUE, col="blue")
@@ -531,6 +538,8 @@ contingency.table <- table(KNNpred,abalone.test$age.group)
 contingency.matrix <- as.matrix(contingency.table)
 
 sum(diag(contingency.matrix))/length(abalone.test$age.group)
+
+
 
 ## run text with multiple k values
 accuracy <- c()
@@ -571,7 +580,7 @@ sqrt(105)
 
 k = 11
 
-# train model & predict for sepal.length & sepal.width
+# train model & predict for iris
 KNNpred <- knn(train = iris.train[1:4], test = iris.test[1:4], cl = iris.train$Species, k = k)
 
 # create contingency table/ confusion matrix
@@ -580,6 +589,8 @@ iris_contingency.table <- table(KNNpred,iris.test$Species)
 iris_contingency.matrix <- as.matrix(iris_contingency.table)
 
 sum(diag(iris_contingency.matrix))/length(iris.test$Species)
+
+write.csv(iris_contingency.table, "~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab02/Lab02_Part02/iris_contingency_table.csv")
 
 ## run text with multiple k values
 accuracy <- c()
@@ -597,4 +608,38 @@ for (k in ks) {
 plot(ks,accuracy,type = "b", ylim = c(0.3,1.2))
 
 
+# train model & predict for sepal.width & petal.length
+KNNpred2 <- knn(train = iris.train[,c(2,3)], test = iris.test[,c(2,3)], cl = iris.train$Species, k = k)
+
+# create contingency table/ confusion matrix
+iris2_contingency.table <- table(KNNpred2,iris.test$Species)
+
+iris2_contingency.matrix <- as.matrix(iris2_contingency.table)
+
+sum(diag(iris2_contingency.matrix))/length(iris.test$Species)
+
+write.csv(iris2_contingency.table, "~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab02/Lab02_Part02/iris2_contigency_table.csv")
+
+
+## run text with multiple k values
+accuracy <- c()
+ks <- c(4,24,48,68,86)
+
+for (k in ks) {
+  
+  KNNpred2 <- knn(train = iris.train[,c(2,3)], test = iris.test[,c(2,3)], cl = iris.train$Species, k = k)
+  cm = as.matrix(table(Actual=KNNpred2, Predicted = iris.test$Species, dnn=list('predicted','actual')))
+  
+  accuracy <- c(accuracy,sum(diag(cm))/length(iris.test$Species)) 
+  
+}
+
+plot(ks,accuracy,type = "b", ylim = c(0.3,1.2))
+
+
+
+
+### Lab 02 Exercise 03 K Means
+
+library(ggplot2)
 
