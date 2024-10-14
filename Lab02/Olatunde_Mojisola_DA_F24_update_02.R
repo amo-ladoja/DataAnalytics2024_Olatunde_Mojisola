@@ -643,4 +643,70 @@ plot(ks,accuracy,type = "b", ylim = c(0.3,1.2))
 
 library(ggplot2)
 
+ggplot(abalone, aes(x = length, y = whole_weight, colour = age.group)) +
+  geom_point()
 
+
+## set random number generator start value
+set.seed(123)
+
+
+## train kmeans
+abalone.km <- kmeans(abalone[,-8], centers = 3)
+
+
+## abalone.km$cluster
+
+## WCSS: total within cluster sum of squares
+abalone.km$tot.withinss
+
+
+## get and plot clustering output 
+assigned.clusters <- as.factor(abalone.km$cluster)
+
+
+ggplot(abalone, aes(x = length, y = whole_weight, colour = assigned.clusters)) +
+  geom_point()
+
+## run tests with multiple k values and plot WCSS
+wcss <- c()
+
+ks <- c(2,3,4,5,6)
+
+for (k in ks) {
+  
+  abalone.km <- kmeans(abalone[,-8], centers = k)
+  
+  wcss <- c(wcss,abalone.km$tot.withinss)
+  
+}
+plot(ks,wcss,type = "b")
+
+
+# Plotting original plots with labels for iris dataset
+ggplot(iris, aes(x = Sepal.Width, y = Petal.Width, colour = Species)) +
+  geom_point()
+
+# train k means on iris dataset
+iris.newset <- iris[, -5]
+iris.km <- kmeans(iris.newset, centers = 3)
+
+# WCSS: total within cluster sum of squares
+iris.km$tot.withinss
+
+# get and plot clustering output
+assigned.clusters <- as.factor(iris.km$cluster)
+ggplot(iris, aes(x = Sepal.Width, y = Petal.Width, colour = assigned.clusters)) +
+  geom_point()
+
+
+# Checking different values of k for iris dataset
+wss <- c()
+
+ks <- c(4,6,8,9)
+for (k in ks) {
+  km <- kmeans(iris.subset, centers = k)
+  wss <- c(wss, km$tot.withinss)
+}
+
+plot(ks,wss,type = "b")
