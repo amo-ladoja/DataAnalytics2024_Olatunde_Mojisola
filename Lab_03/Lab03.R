@@ -424,4 +424,5 @@ if (wcss_group1_new_region < wcss_group2_new_region) {
 
 
 #####Clustering (kMeans) Ex 1.2
-
+###In a loop fit kmeans models for both subsets using multiple values of k. Plot WCSS across k values. In
+###1-2 sentences explain which model is better and why you think that is the case. 
