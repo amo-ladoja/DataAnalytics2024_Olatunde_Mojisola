@@ -211,10 +211,95 @@ print(t_knn_cm$table)
 print(performance_comparison)
 
 
-
-
-
-
 ### NY Housing Dataset ###
 
 
+NYH_data <- read.csv("~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab05/NY-House-Dataset.csv")
+
+#View Dataset
+View(NYH_data)
+
+
+# Select relevant columns and remove missing or invalid values
+NYH_data <- NYH_data[!is.na(NYH_data$PRICE) & !is.na(NYH_data$PROPERTYSQFT) & 
+                       NYH_data$PRICE > 0 & NYH_data$PROPERTYSQFT > 0, ]
+
+# Define features and target variable
+NYH_X <-  NYH_data$PROPERTYSQFT
+NYH_y <- NYH_data$PRICE
+
+# Split data into training and testing sets
+set.seed(42)
+NYH_train_indices <- sample(1:nrow(NYH_data), size = 0.8 * nrow(NYH_data))
+NYH_X_train <- NYH_X[NYH_train_indices]
+NYH_y_train <- NYH_y[NYH_train_indices]
+NYH_X_test <- NYH_X[-NYH_train_indices]
+NYH_y_test <- NYH_y[-NYH_train_indices]
+
+# Train SVM regression model
+NYH_svm_model <- svm(NYH_y_train ~ NYH_X_train, kernel = "radial")
+
+# Predict on test set
+NYH_y_pred <- predict(NYH_svm_model, data.frame(NYH_X_train = NYH_X_test))
+
+# Calculate Mean Squared Error
+mse <- mean((NYH_y_pred - NYH_y_test)^2)
+print(paste("Mean Squared Error:", mse))
+
+
+# Plot predicted vs actual prices
+ggplot(data = data.frame(Actual = NYH_y_test, Predicted = NYH_y_pred), aes(x = Actual, y = Predicted)) +
+  geom_point(alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 1, color = "brown", linetype = "dashed") +
+  labs(title = "SVM Regression: Predicted vs Actual Prices",
+       x = "Actual Prices",
+       y = "Predicted Prices") +
+  theme_minimal()
+
+
+
+### ##Training LM to predict 
+
+NYH_data <- read.csv("~/ITWS-1100/DataAnalytics2024_Olatunde_Mojisola/Lab05/NY-House-Dataset.csv")
+
+#View Dataset
+View(NYH_data)
+
+
+# Select relevant columns and remove missing or invalid values
+NYH_data <- NYH_data[!is.na(NYH_data$PRICE) & !is.na(NYH_data$PROPERTYSQFT) & 
+                       NYH_data$PRICE > 0 & NYH_data$PROPERTYSQFT > 0, ]
+
+# Define features and target variable
+NYH_X <-  NYH_data$PROPERTYSQFT
+NYH_y <- NYH_data$PRICE
+
+
+# Split data into training and testing sets
+set.seed(42)
+NYH_train_indices <- sample(1:nrow(NYH_data), size = 0.8 * nrow(NYH_data))
+NYH_train_data <- NYH_data[NYH_train_indices, ]
+NYH_test_data <- NYH_data[-NYH_train_indices, ]
+
+
+# Train a linear regression model
+NYH_linear_model <- lm(NYH_y ~ NYH_X, data = NYH_train_data)
+
+
+# Predict on test set
+NY_y_pred <- predict(NYH_linear_model, newdata = NYH_test_data)
+
+
+# Calculate Mean Squared Error
+lm_mse <- mean((NYH_y_pred - NYH_test_data$PRICE)^2)
+print(paste("Mean Squared Error:", lm_mse))
+
+
+# Plot predicted vs actual prices
+ggplot(data = data.frame(Actual = NYH_test_data$PRICE, Predicted = NYH_y_pred), aes(x = Actual, y = Predicted)) +
+  geom_point(alpha = 0.7) +
+  geom_abline(intercept = 0, slope = 1, color = "brown", linetype = "dashed") +
+  labs(title = "Linear Regression: Predicted vs Actual Prices",
+       x = "Actual Prices",
+       y = "Predicted Prices") +
+  theme_minimal()
